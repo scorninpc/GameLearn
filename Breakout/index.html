@@ -36,6 +36,7 @@
 			// controle do jogo
 			let interval = 0;
 			let finalizado = false;
+			let score = 0;
 
 			// variaveis da barra
 			const paddleHeight = 10;
@@ -111,6 +112,13 @@
 				}
 			}
 
+			// desenha o score
+			function drawScore() {
+				ctx.font = "14px Arial";
+				ctx.fillStyle = "#0095DD";
+				ctx.fillText(`Score: ${score}`, 8, 20);
+			}
+
 			// detecta a coalisão da bolinha com o tijolinho 
 			function collisionDetection() {
 				for (let c = 0; c < brickColumnCount; c++) {
@@ -125,6 +133,14 @@
 							if ((x > b.x) && (x < b.x + brickWidth) && (y > b.y) && (y < b.y + brickHeight)) {
 								dy = -dy;
 								b.status = 0;
+								score++;
+
+								// quando acabar os blocos, mostra o win
+								if (score === brickRowCount * brickColumnCount) {
+									clearInterval(interval); // aqui nao ta limpando o ultimo bloco e resentando
+									console.log("YOU WIN, CONGRATULATIONS!");
+									runButton.disabled = false;
+								}
 							}
 						}
 					}
@@ -136,9 +152,11 @@
 
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				
+				// faz os desenhos
 				drawBall();
 				drawPaddle();
 				drawBricks();
+				drawScore();
 
 				// calcula a posição da bolinha
 				x += dx;
@@ -199,8 +217,9 @@
 			function startGame() {
 
 				createBricks();
-				
+
 				finalizado = false;
+				score = 0;
 
 				x = canvas.width / 2;
 				y = canvas.height - 30;
