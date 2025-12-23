@@ -66,6 +66,7 @@
 			let finalizado = false;
 			let score = 0;
 			let lives = 3;
+			let level = 1;
 
 			// variaveis da barra
 			const paddleHeight = 10;
@@ -145,14 +146,7 @@
 			function drawScore() {
 				ctx.font = "14px Arial";
 				ctx.fillStyle = "#0095DD";
-				ctx.fillText(`Score: ${score}`, 8, 20);
-			}
-
-			// desenha as vidas
-			function drawLives() {
-				ctx.font = "14px Arial";
-				ctx.fillStyle = "#0095DD";
-				ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
+				ctx.fillText(`Lives: ${lives} / Level: ${level} / Score: ${score}`, 8, 20);
 			}
 
 			// detecta a coalisão da bolinha com o tijolinho 
@@ -177,9 +171,14 @@
 
 								// quando acabar os blocos, mostra o win
 								if (score === brickRowCount * brickColumnCount) {
-									clearInterval(interval); // aqui nao ta limpando o ultimo bloco e resentando
-									console.log("YOU WIN, CONGRATULATIONS!");
-									runButton.disabled = false;
+									// clearInterval(interval); // aqui nao ta limpando o ultimo bloco e resentando
+
+									audWin.currentTime = 0;
+									audWin.play();
+
+									level++;
+
+									resetLevel();
 								}
 							}
 						}
@@ -197,7 +196,6 @@
 				drawPaddle();
 				drawBricks();
 				drawScore();
-				drawLives();
 
 				// calcula a posição da bolinha
 				x += dx;
@@ -215,7 +213,7 @@
 					// algumas situações ele hita a barra menos ou mais que o centro da bolinha, então calcula 1/3 da bolinha,que é X (meio) - ballRadius/2
 					if ((((x + ballRadius/2) > paddleX) && ((x - ballRadius/2) < paddleX + paddleWidth)) && !(finalizado)) {
 						dy = -dy;
-						
+
 						// toca o hit
 						audHitPaddle.currentTime = 0;
 						audHitPaddle.play();
@@ -228,30 +226,28 @@
 						if(y > canvas.height + ballRadius) {
 							lives--;
 
-							clearInterval(interval);
-
 							audLose.currentTime = 0;
 							audLose.play();
 
-							if(lives < 0) {
+							if(lives <= 0) {
+								clearInterval(interval);
+
 								console.log("GAMEOVER");
 								runButton.disabled = false;
 							}
 							else {
-
 								finalizado = false;
+
 								x = canvas.width / 2;
 								y = canvas.height - 30;
 
-								dx = 2;
-								dy = -2;
+								dx = (2 * level);
+								dy = -(2 * level);
 
 								paddleX = (canvas.width - paddleWidth) / 2;
 
 								rightPressed = false;
 								leftPressed = false;
-								
-								interval = setInterval(draw, 10);
 							}
 						}
 					}
@@ -308,8 +304,8 @@
 				x = canvas.width / 2;
 				y = canvas.height - 30;
 
-				dx = 2;
-				dy = -2;
+				dx = (2 * level);
+				dy = -(2 * level);
 
 				paddleX = (canvas.width - paddleWidth) / 2;
 
