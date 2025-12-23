@@ -37,6 +37,7 @@
 			let interval = 0;
 			let finalizado = false;
 			let score = 0;
+			let lives = 3;
 
 			// variaveis da barra
 			const paddleHeight = 10;
@@ -119,6 +120,13 @@
 				ctx.fillText(`Score: ${score}`, 8, 20);
 			}
 
+			// desenha as vidas
+			function drawLives() {
+				ctx.font = "14px Arial";
+				ctx.fillStyle = "#0095DD";
+				ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
+			}
+
 			// detecta a coalisão da bolinha com o tijolinho 
 			function collisionDetection() {
 				for (let c = 0; c < brickColumnCount; c++) {
@@ -157,6 +165,7 @@
 				drawPaddle();
 				drawBricks();
 				drawScore();
+				drawLives();
 
 				// calcula a posição da bolinha
 				x += dx;
@@ -181,10 +190,30 @@
 
 						// ja deu gameover, mais deixa a animação da bolinha sair completamente da tela para finalizar o jogo
 						if(y > canvas.height + ballRadius) {
-							clearInterval(interval);
-							console.log("GAMEOVER");
+							lives--;
 
-							runButton.disabled = false;
+							clearInterval(interval);
+
+							if(lives < 0) {
+								console.log("GAMEOVER");
+								runButton.disabled = false;
+							}
+							else {
+
+								finalizado = false;
+								x = canvas.width / 2;
+								y = canvas.height - 30;
+
+								dx = 2;
+								dy = -2;
+
+								paddleX = (canvas.width - paddleWidth) / 2;
+
+								rightPressed = false;
+								leftPressed = false;
+								
+								interval = setInterval(draw, 10);
+							}
 						}
 					}
 				}
@@ -220,6 +249,7 @@
 
 				finalizado = false;
 				score = 0;
+				lives = 3;
 
 				x = canvas.width / 2;
 				y = canvas.height - 30;
@@ -264,8 +294,12 @@
 			document.addEventListener("mousemove", mouseMoveHandler);
 			function mouseMoveHandler(e) {
 				const relativeX = e.clientX - canvas.offsetLeft;
-				if (relativeX > 0 && relativeX < canvas.width) {
+				if(relativeX > 0 && relativeX < canvas.width) {
+					
 					paddleX = relativeX - paddleWidth / 2;
+
+					paddleX = Math.min(paddleX, canvas.width - paddleWidth);
+					paddleX = Math.max(paddleX, 0);
 				}
 			}
 
