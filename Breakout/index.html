@@ -32,6 +32,14 @@
 			const canvas = document.getElementById("myCanvas");
 			const ctx = canvas.getContext("2d");
 
+			// variaveis da barra
+			const paddleHeight = 10;
+			const paddleWidth = 75;
+			let paddleX = (canvas.width - paddleWidth) / 2;
+			let rightPressed = false;
+			let leftPressed = false;
+
+			// variaveis da bolinha
 			let x = canvas.width / 2;
 			let y = canvas.height - 30;
 
@@ -40,6 +48,7 @@
 			let dx = 2;
 			let dy = -2;
 
+			// desenha a bolinha
 			function drawBall() {
 				ctx.beginPath();
 				ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
@@ -48,18 +57,30 @@
 				ctx.closePath();
 			}
 
+			// desenha a barra
+			function drawPaddle() {
+				ctx.beginPath();
+				ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+				ctx.fillStyle = "#0095DD";
+				ctx.fill();
+				ctx.closePath();
+			}
+
+			// loop principal
 			function draw() {
 
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				
 				drawBall();
+				drawPaddle();
 
+				// calcula a posição da bolinha
 				x += dx;
 				y += dy;
 
 				// coalisão TOP (se a bolinha + movimento for MENOR que 0, fora da tela)
 				// ao invez de 0, usamos ballRadius, pois não queremos o HIT no meio da bola, mais sim quando a bola encostar
-				if ((y + dy < ballRadius) || (y + dy > canvas.height - ballRadius)) {
+				if((y + dy < ballRadius) || (y + dy > canvas.height - ballRadius)) {
 					dy = -dy;
 				}
 
@@ -69,17 +90,46 @@
 					dx = -dx;
 				}
 
+				// move e desenha a barrinha
+				if (rightPressed) {
+					paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
+				} else if (leftPressed) {
+					paddleX = Math.max(paddleX - 7, 0);
+				}
+				
+
 			}
 
+			// função que inicia o jogo
 			function startGame() {
 				setInterval(draw, 10);
 			}
 
+			// botão para iniciar o jogo
 			const runButton = document.getElementById("runButton");
 			runButton.addEventListener("click", () => {
 				startGame();
 				runButton.disabled = true;
 			});
+
+			// evento de pressionar e soltar os botões do teclado
+			document.addEventListener("keydown", keyDownHandler);
+			document.addEventListener("keyup", keyUpHandler);
+			function keyDownHandler(e) {
+				if (e.key === "Right" || e.key === "ArrowRight" || e.key === "d") {
+					rightPressed = true;
+				} else if (e.key === "Left" || e.key === "ArrowLeft" || e.key === "a") {
+					leftPressed = true;
+				}
+			}
+			function keyUpHandler(e) {
+				if (e.key === "Right" || e.key === "ArrowRight" || e.key === "d") {
+					rightPressed = false;
+				} else if (e.key === "Left" || e.key === "ArrowLeft" || e.key === "a") {
+					leftPressed = false;
+				}
+			}
+
 
 		</script>
 		
