@@ -5,6 +5,7 @@
 
 <!-- referencias -->
 <!-- https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript -->
+<!-- https://freesound.org/people/qubodup/sounds/757612/ -->
 
 <html lang="pt-br">
 	<head>
@@ -29,7 +30,16 @@
 		<canvas id="myCanvas" width="480" height="320"></canvas>
 		<button id="runButton">Start game</button>
 
+		<audio  id="audHitBrick" preload="auto">
+			<source src="757612__qubodup__pop-sound.ogg" type="audio/ogg">
+			<source src="757612__qubodup__pop-sound.mp3" type="audio/mpeg">
+		</audio>
+
 		<script>
+			// inicializa os audios
+			const audHitBrick = document.getElementById("audHitBrick");
+
+			// inicializa o canvas
 			const canvas = document.getElementById("myCanvas");
 			const ctx = canvas.getContext("2d");
 
@@ -142,6 +152,10 @@
 								dy = -dy;
 								b.status = 0;
 								score++;
+
+								// toca o hit
+								audHitBrick.currentTime = 0;
+								audHitBrick.play();
 
 								// quando acabar os blocos, mostra o win
 								if (score === brickRowCount * brickColumnCount) {
