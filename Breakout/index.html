@@ -34,10 +34,15 @@
 			<source src="757612__qubodup__pop-sound.ogg" type="audio/ogg">
 			<source src="757612__qubodup__pop-sound.mp3" type="audio/mpeg">
 		</audio>
+		<audio  id="audHitPaddle" preload="auto">
+			<source src="463391__vilkas_sound__vs-pop_1.ogg" type="audio/ogg">
+			<source src="463391__vilkas_sound__vs-pop_1.mp3" type="audio/mpeg">
+		</audio>
 
 		<script>
 			// inicializa os audios
 			const audHitBrick = document.getElementById("audHitBrick");
+			const audHitPaddle = document.getElementById("audHitPaddle");
 
 			// inicializa o canvas
 			const canvas = document.getElementById("myCanvas");
@@ -197,6 +202,10 @@
 					// algumas situações ele hita a barra menos ou mais que o centro da bolinha, então calcula 1/3 da bolinha,que é X (meio) - ballRadius/2
 					if ((((x + ballRadius/2) > paddleX) && ((x - ballRadius/2) < paddleX + paddleWidth)) && !(finalizado)) {
 						dy = -dy;
+						
+						// toca o hit
+						audHitPaddle.currentTime = 0;
+						audHitPaddle.play();
 					}
 					else {
 						// game over
