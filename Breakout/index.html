@@ -35,12 +35,14 @@
 			let x = canvas.width / 2;
 			let y = canvas.height - 30;
 
+			const ballRadius = 10;
+
 			let dx = 2;
 			let dy = -2;
 
 			function drawBall() {
 				ctx.beginPath();
-				ctx.arc(x, y, 10, 0, Math.PI * 2);
+				ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
 				ctx.fillStyle = "#0095DD";
 				ctx.fill();
 				ctx.closePath();
@@ -54,6 +56,30 @@
 
 				x += dx;
 				y += dy;
+
+				// coalisão TOP (se a bolinha + movimento for MENOR que 0, fora da tela)
+				// ao invez de 0, usamos ballRadius, pois não queremos o HIT no meio da bola, mais sim quando a bola encostar
+				if (y + dy < ballRadius) {
+					dy = -dy;
+				}
+
+				// coalisão BOTTOM (se a bolinha + movimento for MAIOR que a tela, fora da tela)
+				// ao invez de canvas.height, usamos canvas.height - ballRadius, pois não queremos o HIT no meio da bola, mais sim quando a bola encostar
+				if (y + dy > canvas.height - ballRadius) {
+					dy = -dy;
+				}
+
+				// coalisão LEFT (se a bolinha + movimento for MENOR que a tela de lado, fora da tela)
+				// ao invez de 0, usamos ballRadius, pois não queremos o HIT no meio da bola, mais sim quando a bola encostar
+				if (x + dx < ballRadius) {
+					dx = -dx;
+				}
+
+				// coalisão RIGHT (se a bolinha + movimento for MAIOR que a tela de lado, fora da tela)
+				// ao invez de canvas.height, usamos canvas.height - ballRadius, pois não queremos o HIT no meio da bola, mais sim quando a bola encostar
+				if (x + dx > canvas.width - ballRadius) {
+					dx = -dx;
+				}
 
 			}
 
