@@ -173,10 +173,7 @@
 								audHitBrick.currentTime = 0;
 								audHitBrick.play();
 
-								console.log(bricksLeft);
-
 								// quando acabar os blocos, mostra o win
-								// if (score === brickRowCount * brickColumnCount) {
 								if(bricksLeft == 0) {
 									// clearInterval(interval); // aqui nao ta limpando o ultimo bloco e resentando
 
@@ -248,8 +245,8 @@
 								x = canvas.width / 2;
 								y = canvas.height - 30;
 
-								dx = (2 * level);
-								dy = -(2 * level);
+								dx = velocidade();
+								dy = velocidade() * -1;
 
 								paddleX = (canvas.width - paddleWidth) / 2;
 
@@ -311,13 +308,17 @@
 				x = canvas.width / 2;
 				y = canvas.height - 30;
 
-				dx = (2 * level);
-				dy = -(2 * level);
+				dx = velocidade();
+				dy = velocidade() * -1;
 
 				paddleX = (canvas.width - paddleWidth) / 2;
 
 				rightPressed = false;
 				leftPressed = false;
+			}
+
+			function velocidade() {
+				return 2 + ((4 - 2) / 15) * level;
 			}
 
 			// botão para iniciar o jogo
