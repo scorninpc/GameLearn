@@ -6,6 +6,9 @@
 <!-- referencias -->
 <!-- https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript -->
 <!-- https://freesound.org/people/qubodup/sounds/757612/ -->
+<!-- https://freesound.org/people/qubodup/sounds/463391/ -->
+<!-- https://freesound.org/people/aleixcm/sounds/233496/ -->
+<!-- https://pixabay.com/sound-effects/ui-build-finish-398858/ -->
 
 <html lang="pt-br">
 	<head>
@@ -38,11 +41,21 @@
 			<source src="463391__vilkas_sound__vs-pop_1.ogg" type="audio/ogg">
 			<source src="463391__vilkas_sound__vs-pop_1.mp3" type="audio/mpeg">
 		</audio>
+		<audio  id="audLose" preload="auto">
+			<source src="ui-build-finish-398858.ogg" type="audio/ogg">
+			<source src="ui-build-finish-398858.mp3" type="audio/mpeg">
+		</audio>
+		<audio  id="audWin" preload="auto">
+			<source src="233496__aleixcm__microwave_bell.ogg" type="audio/ogg">
+			<source src="233496__aleixcm__microwave_bell.mp3" type="audio/mpeg">
+		</audio>
 
 		<script>
 			// inicializa os audios
 			const audHitBrick = document.getElementById("audHitBrick");
 			const audHitPaddle = document.getElementById("audHitPaddle");
+			const audLose = document.getElementById("audLose");
+			const audWin = document.getElementById("audWin");
 
 			// inicializa o canvas
 			const canvas = document.getElementById("myCanvas");
@@ -217,6 +230,9 @@
 
 							clearInterval(interval);
 
+							audLose.currentTime = 0;
+							audLose.play();
+
 							if(lives < 0) {
 								console.log("GAMEOVER");
 								runButton.disabled = false;
@@ -267,12 +283,27 @@
 
 			// função que inicia o jogo
 			function startGame() {
+				
+				resetGame();
 
-				createBricks();
+				interval = setInterval(draw, 10);
+			}
 
-				finalizado = false;
+			// reseta o game
+			function resetGame() {
+				level = 1;
 				score = 0;
 				lives = 3;
+
+				finalizado = false;
+
+				resetLevel();
+			}
+
+			// reseta o level
+			function resetLevel()
+			{
+				createBricks();
 
 				x = canvas.width / 2;
 				y = canvas.height - 30;
@@ -284,8 +315,6 @@
 
 				rightPressed = false;
 				leftPressed = false;
-				
-				interval = setInterval(draw, 10);
 			}
 
 			// botão para iniciar o jogo
