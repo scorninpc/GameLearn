@@ -32,6 +32,9 @@
 			const canvas = document.getElementById("myCanvas");
 			const ctx = canvas.getContext("2d");
 
+			// controle do jogo
+			let interval = 0;
+
 			// variaveis da barra
 			const paddleHeight = 10;
 			const paddleWidth = 75;
@@ -80,8 +83,25 @@
 
 				// coalisão TOP (se a bolinha + movimento for MENOR que 0, fora da tela)
 				// ao invez de 0, usamos ballRadius, pois não queremos o HIT no meio da bola, mais sim quando a bola encostar
-				if((y + dy < ballRadius) || (y + dy > canvas.height - ballRadius)) {
+				// agora ela só colide com o TOP, pois se fizer a coalisão com BOTTOM é porque deu gameover
+				if(y + dy < ballRadius) {
 					dy = -dy;
+				}
+				else if (y + dy > (canvas.height - ballRadius - paddleHeight)) {
+
+					// se está colidindo com a barra
+					// algumas situações ele hita a barra menos ou mais que o centro da bolinha, então calcula 1/3 da bolinha,que é X (meio) - ballRadius/2
+					if (((x + ballRadius/2) > paddleX) && ((x - ballRadius/2) < paddleX + paddleWidth)) {
+						dy = -dy;
+					}
+					else {
+						// game over
+						// ja deu gameover, mais deixa a animação da bolinha sair completamente da tela para finalizar o jogo
+						if(y > canvas.height + ballRadius) {
+							clearInterval(interval);
+							console.log("GAMEOVER");
+						}
+					}
 				}
 
 				// coalisão LEFT (se a bolinha + movimento for MENOR que a tela de lado, fora da tela)
@@ -102,7 +122,7 @@
 
 			// função que inicia o jogo
 			function startGame() {
-				setInterval(draw, 10);
+				interval = setInterval(draw, 10);
 			}
 
 			// botão para iniciar o jogo
