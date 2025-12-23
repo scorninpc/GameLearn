@@ -59,25 +59,13 @@
 
 				// coalisão TOP (se a bolinha + movimento for MENOR que 0, fora da tela)
 				// ao invez de 0, usamos ballRadius, pois não queremos o HIT no meio da bola, mais sim quando a bola encostar
-				if (y + dy < ballRadius) {
-					dy = -dy;
-				}
-
-				// coalisão BOTTOM (se a bolinha + movimento for MAIOR que a tela, fora da tela)
-				// ao invez de canvas.height, usamos canvas.height - ballRadius, pois não queremos o HIT no meio da bola, mais sim quando a bola encostar
-				if (y + dy > canvas.height - ballRadius) {
+				if ((y + dy < ballRadius) || (y + dy > canvas.height - ballRadius)) {
 					dy = -dy;
 				}
 
 				// coalisão LEFT (se a bolinha + movimento for MENOR que a tela de lado, fora da tela)
 				// ao invez de 0, usamos ballRadius, pois não queremos o HIT no meio da bola, mais sim quando a bola encostar
-				if (x + dx < ballRadius) {
-					dx = -dx;
-				}
-
-				// coalisão RIGHT (se a bolinha + movimento for MAIOR que a tela de lado, fora da tela)
-				// ao invez de canvas.height, usamos canvas.height - ballRadius, pois não queremos o HIT no meio da bola, mais sim quando a bola encostar
-				if (x + dx > canvas.width - ballRadius) {
+				if ((x + dx < ballRadius) || (x + dx > canvas.width - ballRadius)) {
 					dx = -dx;
 				}
 
