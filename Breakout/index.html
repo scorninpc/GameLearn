@@ -62,7 +62,7 @@
 			const ctx = canvas.getContext("2d");
 
 			// controle do jogo
-			let interval = 0;
+			let frameRequest = null;
 			let finalizado = false;
 			let score = 0;
 			let lives = 3;
@@ -175,13 +175,13 @@
 
 								// quando acabar os blocos, mostra o win
 								if(bricksLeft == 0) {
-									// clearInterval(interval); // aqui nao ta limpando o ultimo bloco e resentando
 
+									// toca
 									audWin.currentTime = 0;
 									audWin.play();
 
+									// sobe um level
 									level++;
-
 									resetLevel();
 								}
 							}
@@ -234,10 +234,11 @@
 							audLose.play();
 
 							if(lives <= 0) {
-								clearInterval(interval);
-
 								console.log("GAMEOVER");
 								runButton.disabled = false;
+
+								cancelAnimationFrame(frameRequest);
+								return;
 							}
 							else {
 								finalizado = false;
@@ -264,21 +265,22 @@
 				}
 
 				// se ja está finalizado nao faz mais nada, só desenha a bolinha mesmo
-				if((finalizado)) {
-					return;
+				if(!finalizado) {
+					// move e desenha a barrinha
+					if(rightPressed) {
+						paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
+					}
+					else if(leftPressed) {
+						paddleX = Math.max(paddleX - 7, 0);
+					}
+					
+					// calcula a coalisão com algum tijolinho
+					collisionDetection();
 				}
 
-
-				// move e desenha a barrinha
-				if(rightPressed) {
-					paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
-				}
-				else if(leftPressed) {
-					paddleX = Math.max(paddleX - 7, 0);
-				}
+				// redraw
+				frameRequest = requestAnimationFrame(draw);
 				
-				// calcula a coalisão com algum tijolinho
-				collisionDetection();
 			}
 
 			// função que inicia o jogo
@@ -286,7 +288,7 @@
 				
 				resetGame();
 
-				interval = setInterval(draw, 10);
+				draw();
 			}
 
 			// reseta o game
@@ -315,10 +317,12 @@
 
 				rightPressed = false;
 				leftPressed = false;
+
+				console.log("velocidade: " + velocidade());
 			}
 
 			function velocidade() {
-				return 2 + ((4 - 2) / 15) * level;
+				return 3 + ((level - 2) / 10) * level;
 			}
 
 			// botão para iniciar o jogo
