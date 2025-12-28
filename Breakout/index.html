@@ -219,9 +219,12 @@
 						
 						dy = -dy;
 
-						// dx = (-1 * velocidade()) + ((paddleX + paddleWidth / 2) - (x + ballRadius / 2)) / 100 ;
-
-						// console.log(velocidade(), (          (paddleX + paddleWidth / 2) - (x + ballRadius / 2)         ), dx);
+						// cria uma pequena regra para dar uma pequena aleatoriedade ao jogo
+						let relative = (paddleX + paddleWidth / 2) - (x + ballRadius / 2);
+						dx = velocidade() + (Math.abs(relative) / 100);
+						if(relative > 0) {
+							dx = dx * -1;
+						}
 
 						// toca o hit
 						audHitPaddle.currentTime = 0;
